@@ -65,21 +65,22 @@ public class Main {
         RequestHandler h1=new ExistingContentCheckRequestHandler();
         RequestHandler h2 =new PolicyCheckRequestHandler();
         RequestHandler h3=new RenderContentHandler();
+
         /**
          * chain handlers
          */
         h1.setSuccessor(h2);
         h2.setSuccessor(h3);
-
-
-
+        /**creates a web server and gives it the first handler */
         WebServer webServer = new WebServer(h1);
+
         /**
          * creates a file logger and add it as observer of the web server
          */
         FileLogger fileLogger = new FileLogger("logs.txt");
         webServer.attach(fileLogger);
 
+        /**creates two users */
         User regularUser = new User(false);
         User adminUser = new User(true);
 
