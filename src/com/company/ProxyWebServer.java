@@ -7,41 +7,30 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/**and my proxy webserver is a Smart proxy that
+ * add extra functionality (logging) to the calls to the real web server
+ */
 public class ProxyWebServer implements AbstractWebServer{
     RealWebServer realWebServer ;
-    String filePath;
+    FileLogger fileLogger;
 
-    public ProxyWebServer(String filePath,RealWebServer realWebServer) {
+    public ProxyWebServer(FileLogger fileLogger,RealWebServer realWebServer) {
         this.realWebServer=realWebServer;
+        this.fileLogger=fileLogger;
 
-        this.filePath = filePath;
-        try {
-            Files.deleteIfExists(Paths.get(this.filePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    public synchronized void log(String msg) {
-        try {
-            PrintWriter out = new PrintWriter(new FileOutputStream(this.filePath, true));
-            out.println(msg);
-            out.close();
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        }
-    }
 
 
     @Override
     public void getRequest(WebRequest request) {
         this.realWebServer.getRequest(request);
         if(request.getLoggedUser().isAdmin()){
-            this.log("Request made to "+request.getPath()+" by admin user");
+            this.fileLogger.log("Request made to "+request.getPath()+" by admin user");
         }
         else
         {
-            this.log("Request made to "+request.getPath()+" by non admin user");
+            this.fileLogger.log("Request made to "+request.getPath()+" by non admin user");
         }
     }
 }

@@ -75,10 +75,13 @@ public class Main {
 
 
         /**
-         * creates a file logger and add it as observer of the web server
+         * creates a file logger and a real web server
          */
         RealWebServer realWebServer =new RealWebServer(h1);
-        ProxyWebServer proxyWebServer = new ProxyWebServer("logs.txt",realWebServer);
+        FileLogger fileLogger=new FileLogger("logs.txt");
+
+        /**creates a proxy web server for getting all requests*/
+        ProxyWebServer proxyWebServer = new ProxyWebServer(fileLogger,realWebServer);
 
 
 
@@ -91,6 +94,7 @@ public class Main {
          * Expected output :
          * Status 403 : user is not authorized to access this content
          */
+        /** my proxy web server is called to get requests **/
         proxyWebServer.getRequest(new WebRequest("/dashboard", regularUser));
 
         /**

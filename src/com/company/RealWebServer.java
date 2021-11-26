@@ -1,5 +1,7 @@
 package com.company;
-
+/**
+ * my realWebServer is a webServer that have only a request handler to assure the chain of
+ * responsability pattern made before*/
 public class RealWebServer implements AbstractWebServer {
     private RequestHandler firstHandler;
 
