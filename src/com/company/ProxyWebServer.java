@@ -7,10 +7,13 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class FileLogger implements WebRequestObserver{
+public class ProxyWebServer implements AbstractWebServer{
+    RealWebServer realWebServer ;
     String filePath;
 
-    public FileLogger(String filePath) {
+    public ProxyWebServer(String filePath,RealWebServer realWebServer) {
+        this.realWebServer=realWebServer;
+
         this.filePath = filePath;
         try {
             Files.deleteIfExists(Paths.get(this.filePath));
@@ -29,8 +32,10 @@ public class FileLogger implements WebRequestObserver{
         }
     }
 
+
     @Override
-    public void update(WebRequest request) {
+    public void getRequest(WebRequest request) {
+        this.realWebServer.getRequest(request);
         if(request.getLoggedUser().isAdmin()){
             this.log("Request made to "+request.getPath()+" by admin user");
         }
